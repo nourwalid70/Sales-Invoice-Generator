@@ -294,27 +294,30 @@ public class controll implements ActionListener, ListSelectionListener  {
 
     private void deleteInvoice() {
         int invIndex = frame.getInvoicesTable().getSelectedRow();
-        frame.getInvoiceHeaderTableModel().getList().remove(invIndex);
-        frame.getInvoiceHeaderTableModel().fireTableDataChanged();
-        frame.setInvoiceLinesTableModel(new invoiceLineTableModel(new ArrayList<InvoiceLine>()));
-        frame.getInvLinesTable().setModel(frame.getInvoiceLinesTableModel());
-        frame.getInvoiceLinesTableModel().fireTableDataChanged();
-        frame.getCustNameTF().setText("");
-        frame.getInvDateTF().setText("");
-        frame.getInvNumLbl().setText("");
-        frame.getInvTotalLbl().setText("");
-        displayInvoices();
+        if (invIndex != -1) {
+	        frame.getInvoiceHeaderTableModel().getList().remove(invIndex);
+	        frame.getInvoiceHeaderTableModel().fireTableDataChanged();
+	        frame.setInvoiceLinesTableModel(new invoiceLineTableModel(new ArrayList<InvoiceLine>()));
+	        frame.getInvLinesTable().setModel(frame.getInvoiceLinesTableModel());
+	        frame.getInvoiceHeaderTableModel().fireTableDataChanged();
+	        frame.getCustNameTF().setText("");
+	        frame.getInvDateTF().setText("");
+	        frame.getInvNumLbl().setText("");
+	        frame.getInvTotalLbl().setText("");
+        }
+        displayInvoices();  
     }
 
     private void deleteLine() {
         int lineIndex = frame.getInvLinesTable().getSelectedRow();
-        InvoiceLine line = frame.getInvoiceLinesTableModel().getList().get(lineIndex);
-        frame.getInvoiceLinesTableModel().getList().remove(lineIndex);
-        frame.getInvoiceLinesTableModel().fireTableDataChanged();
-        frame.getInvoiceHeaderTableModel().fireTableDataChanged();
-        frame.getInvTotalLbl().setText("" + line.getNum().getListTotal());
-        displayInvoices();
- 
+        if (lineIndex != -1) {
+	        InvoiceLine line = frame.getInvoiceLinesTableModel().getList().get(lineIndex);
+	        frame.getInvoiceLinesTableModel().getList().remove(lineIndex);
+	        frame.getInvoiceLinesTableModel().fireTableDataChanged();
+	        frame.getInvoiceHeaderTableModel().fireTableDataChanged();
+	        frame.getInvTotalLbl().setText("" + line.getNum().getListTotal());
+	        displayInvoices();
+        }
     }
 
     private void displayInvoices() {
