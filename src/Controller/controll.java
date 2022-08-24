@@ -235,24 +235,20 @@ public class controll implements ActionListener, ListSelectionListener  {
     private void createInvOK() {
         String custName = frame.getConfirmLeft().getLeftCusName().getText();
         String invDateStr = frame.getConfirmLeft().getLeftDate().getText();
-        frame.getConfirmLeft().setVisible(false);
-        frame.getConfirmLeft().dispose();
-        frame.setConfirmLeft(null);
         try {
             Date invDate = df.parse(invDateStr);
             int invNum = getNextInvoiceNum();
             InvoiceHeader invoiceHeader = new InvoiceHeader(invNum, invDate, custName);
             frame.getInvoicesList().add(invoiceHeader);
             frame.getInvoiceHeaderTableModel().fireTableDataChanged();
+            frame.getConfirmLeft().setVisible(false);
+            frame.getConfirmLeft().dispose();
         } catch (ParseException e) {
             JOptionPane.showMessageDialog(frame, "Wrong date format", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }finally {
         	displayInvoices();
-        } 
-        
-        
-        
+        }   
     }
 
     private int getNextInvoiceNum() {
@@ -273,23 +269,21 @@ public class controll implements ActionListener, ListSelectionListener  {
     }
 
     private void createLineOK() {
-        String itemName = frame.getConfirmRight().getRightItemName().getText();
-    String itemCountStr = frame.getConfirmRight().getRightCount().getText();
-    String itemPriceStr = frame.getConfirmRight().getRightPrice().getText();
-    frame.getConfirmRight().setVisible(false);
-    frame.getConfirmRight().dispose();
-    frame.setConfirmRight(null);
-    int itemCount = Integer.parseInt(itemCountStr);
-    double itemPrice = Double.parseDouble(itemPriceStr);
-    int headerIndex = frame.getInvoicesTable().getSelectedRow();
-    InvoiceHeader invoice = frame.getInvoiceHeaderTableModel().getList().get(headerIndex);
-
-    InvoiceLine invoiceLine = new InvoiceLine(invoice, itemName, itemPrice, itemCount);
-    invoice.addLine(invoiceLine);
-    frame.getInvoiceLinesTableModel().fireTableDataChanged();
-    frame.getInvoiceHeaderTableModel().fireTableDataChanged();
-    frame.getInvTotalLbl().setText("" + invoice.getListTotal());
-    displayInvoices();
+	    String itemName = frame.getConfirmRight().getRightItemName().getText();
+	    String itemCountStr = frame.getConfirmRight().getRightCount().getText();
+	    String itemPriceStr = frame.getConfirmRight().getRightPrice().getText();
+	    int itemCount = Integer.parseInt(itemCountStr);
+	    double itemPrice = Double.parseDouble(itemPriceStr);
+	    int headerIndex = frame.getInvoicesTable().getSelectedRow();
+	    if (headerIndex != -1){
+	    InvoiceHeader invoice = frame.getInvoiceHeaderTableModel().getList().get(headerIndex);
+	    InvoiceLine invoiceLine = new InvoiceLine(invoice, itemName, itemPrice, itemCount);
+	    invoice.addLine(invoiceLine);
+	    frame.getInvoiceLinesTableModel().fireTableDataChanged();
+	    frame.getInvoiceHeaderTableModel().fireTableDataChanged();
+	    frame.getInvTotalLbl().setText("" + invoice.getListTotal());
+	    displayInvoices();
+        }
     }
 
     private void deleteInvoice() {
@@ -305,6 +299,7 @@ public class controll implements ActionListener, ListSelectionListener  {
 	        frame.getInvNumLbl().setText("");
 	        frame.getInvTotalLbl().setText("");
         }
+        frame.getInvoicesTable().setVisible(false);
         displayInvoices();  
     }
 
